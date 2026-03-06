@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RAILGRADE Calculator</title>
+<style>
+  :root {
+    --bg: #1a1a2e;
+    --surface: #16213e;
+    --surface2: #0f3460;
+    --accent: #e94560;
+    --accent2: #f5a623;
+    --text: #eee;
+    --text-dim: #999;
+    --border: #333;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    padding: 20px;
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+  h1 { color: var(--accent); margin-bottom: 4px; font-size: 1.6em; }
+  .subtitle { color: var(--text-dim); margin-bottom: 20px; font-size: 0.9em; }
+  .controls {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 20px;
+  }
+  .controls label { display: block; margin-bottom: 4px; font-weight: 600; font-size: 0.9em; }
+  .controls select {
+    width: 100%;
+    padding: 8px;
+    background: var(--bg);
+    color: var(--text);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    font-size: 1em;
+    margin-bottom: 12px;
+  }
+  .recipe-pickers { margin-top: 8px; }
+  .recipe-pickers .picker {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+  }
+  .recipe-pickers .picker span {
+    min-width: 100px;
+    color: var(--accent2);
+    font-weight: 600;
+    font-size: 0.85em;
+  }
+  .recipe-pickers select {
+    flex: 1;
+    margin-bottom: 0;
+  }
+  .section-title {
+    font-size: 1.1em;
+    font-weight: 700;
+    color: var(--accent);
+    margin-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 6px;
+  }
+
+  /* Tree */
+  #tree-container {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 20px;
+    overflow-x: auto;
+  }
+  .tree-node {
+    margin-left: 24px;
+    border-left: 2px solid var(--border);
+    padding-left: 12px;
+    margin-top: 4px;
+  }
+  .tree-node:last-child { border-left-color: transparent; }
+  .tree-root { margin-left: 0; border-left: none; padding-left: 0; }
+  .node-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 3px 0;
+    flex-wrap: wrap;
+    position: relative;
+  }
+  .tree-node:not(.tree-root) > .node-row::before {
+    content: '';
+    position: absolute;
+    left: -13px;
+    top: 50%;
+    width: 12px;
+    height: 2px;
+    background: var(--border);
+  }
+  .node-name { font-weight: 700; color: var(--text); }
+  .node-count { color: var(--accent2); font-weight: 700; }
+  .node-count-exact { color: var(--text-dim); font-size: 0.85em; }
+  .node-rate { color: var(--text-dim); font-size: 0.8em; }
+  .node-resource { color: #7ec8e3; font-size: 0.85em; }
+  .catalyst-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.8em;
+    color: var(--text-dim);
+    cursor: pointer;
+    user-select: none;
+  }
+  .catalyst-toggle input { cursor: pointer; }
+  .catalyst-label { color: #c084fc; }
+
+  /* Summary */
+  #summary-container {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9em;
+  }
+  th {
+    text-align: left;
+    padding: 6px 8px;
+    border-bottom: 2px solid var(--accent);
+    color: var(--accent);
+    font-size: 0.85em;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  th.num, td.num { text-align: right; }
+  td {
+    padding: 5px 8px;
+    border-bottom: 1px solid var(--border);
+  }
+  tr:last-child td { border-bottom: none; }
+  tr.total-row td {
+    border-top: 2px solid var(--accent);
+    font-weight: 700;
+    color: var(--accent2);
+  }
+  .empty-state {
+    color: var(--text-dim);
+    font-style: italic;
+    padding: 20px;
+    text-align: center;
+  }
+</style>
+</head>
+<body>
+
+<h1>RAILGRADE Calculator</h1>
+<p class="subtitle">Production chain calculator — select a target industry to see what you need</p>
+
+<div class="controls">
+  <label for="target-select">Target Industry</label>
+  <div style="display:flex;gap:10px;align-items:center;margin-bottom:12px;">
+    <select id="target-select" style="flex:1;margin-bottom:0;">
+      <option value="">-- Select an industry --</option>
+    </select>
+    <label style="display:flex;align-items:center;gap:6px;font-size:0.85em;white-space:nowrap;margin-bottom:0;">
+      Level
+      <input type="number" id="target-level" min="0" max="10" value="0"
+        style="width:50px;padding:6px;background:var(--bg);color:var(--text);border:1px solid var(--border);border-radius:4px;font-size:1em;">
+    </label>
+  </div>
+  <div id="recipe-pickers" class="recipe-pickers"></div>
+</div>
+
+<div id="tree-container">
+  <div class="section-title">Dependency Tree</div>
+  <div id="tree" class="empty-state">Select an industry above to calculate its production chain.</div>
+</div>
+
+<div id="summary-container">
+  <div class="section-title">Summary</div>
+  <div id="summary" class="empty-state">No data yet.</div>
+</div>
+
+<script>
+const INDUSTRIES = [{"name":"Water Pump","price":1024,"numberOfWorkers":0,"time":16,"inputs":[],"outputs":[{"name":"Water","quantity":1}],"catalyst":"Energy"},{"name":"Oil Well","price":1024,"numberOfWorkers":0,"time":16,"inputs":[],"outputs":[{"name":"Crude Oil","quantity":1}],"catalyst":"Water"},{"name":"Geothermal","price":4096,"numberOfWorkers":0,"time":16,"inputs":[],"outputs":[{"name":"Energy","quantity":1}],"catalyst":"Water"},{"name":"Coal Mine","price":1024,"numberOfWorkers":0,"time":16,"inputs":[],"outputs":[{"name":"Coal","quantity":1}],"catalyst":"Waste"},{"name":"Copper Mine","price":1024,"numberOfWorkers":0,"time":16,"inputs":[],"outputs":[{"name":"Copper","quantity":1}],"catalyst":"Waste"},{"name":"Iron Mine","price":1024,"numberOfWorkers":0,"time":16,"inputs":[],"outputs":[{"name":"Iron","quantity":2}],"catalyst":"Waste"},{"name":"Silica Quarry","price":1024,"numberOfWorkers":0,"time":16,"inputs":[],"outputs":[{"name":"Silica","quantity":2}],"catalyst":"Waste"},{"name":"Coal Powerplant","price":2048,"numberOfWorkers":4,"time":8,"inputs":[{"name":"Coal","quantity":2}],"outputs":[{"name":"Energy","quantity":1}],"catalyst":"Water"},{"name":"Oil Powerplant","price":2048,"numberOfWorkers":4,"time":8,"inputs":[{"name":"Crude Oil","quantity":2}],"outputs":[{"name":"Energy","quantity":1}],"catalyst":"Water"},{"name":"Oil Refinery","price":2048,"numberOfWorkers":4,"time":16,"inputs":[{"name":"Crude Oil","quantity":2}],"outputs":[{"name":"Reactives","quantity":1}],"catalyst":"Water"},{"name":"Steel Mill","price":4096,"numberOfWorkers":8,"time":8,"inputs":[{"name":"Coal","quantity":2},{"name":"Iron","quantity":2}],"outputs":[{"name":"Steel","quantity":2}],"catalyst":"Energy"},{"name":"Salt Refinery","price":2048,"numberOfWorkers":2,"time":16,"inputs":[{"name":"Silica","quantity":2}],"outputs":[{"name":"Salt","quantity":1}],"catalyst":"Energy"},{"name":"Plasticizer","price":2048,"numberOfWorkers":4,"time":16,"inputs":[{"name":"Crude Oil","quantity":2}],"outputs":[{"name":"Plastic","quantity":1}],"catalyst":"Water"},{"name":"Hardmold","price":2048,"numberOfWorkers":4,"time":16,"inputs":[{"name":"Coal","quantity":2}],"outputs":[{"name":"Plastic","quantity":1}],"catalyst":"Energy"},{"name":"Solva","price":2048,"numberOfWorkers":4,"time":32,"inputs":[{"name":"Crude Oil","quantity":1},{"name":"Silica","quantity":2},{"name":"Water","quantity":1}],"outputs":[{"name":"Solvent","quantity":6},{"name":"Waste","quantity":1}],"catalyst":"Neon Gas"},{"name":"Wire Coiler","price":1024,"numberOfWorkers":2,"time":32,"inputs":[{"name":"Copper","quantity":1}],"outputs":[{"name":"Wire","quantity":2}],"catalyst":"Energy"},{"name":"Concrete Yard","price":2048,"numberOfWorkers":4,"time":16,"inputs":[{"name":"Silica","quantity":2},{"name":"Water","quantity":1}],"outputs":[{"name":"Concrete","quantity":1}],"catalyst":"Energy"},{"name":"Appliance Plant","price":4096,"numberOfWorkers":4,"time":16,"inputs":[{"name":"Steel","quantity":1},{"name":"Wire","quantity":1}],"outputs":[{"name":"Appliances","quantity":1}],"catalyst":"Energy"},{"name":"Electronics Fab","price":4096,"numberOfWorkers":4,"time":16,"inputs":[{"name":"Silica","quantity":1},{"name":"Wire","quantity":2},{"name":"Energy","quantity":1}],"outputs":[{"name":"Appliances","quantity":3},{"name":"Waste","quantity":1}],"catalyst":"Water"},{"name":"Incinerator","price":2048,"numberOfWorkers":1,"time":32,"inputs":[{"name":"Waste","quantity":2}],"outputs":[],"catalyst":"Solvent"},{"name":"Tool Die","price":2048,"numberOfWorkers":2,"time":32,"inputs":[{"name":"Plastic","quantity":1}],"outputs":[{"name":"Widgets","quantity":1}],"catalyst":"Energy"},{"name":"Glass Smelter","price":4096,"numberOfWorkers":4,"time":16,"inputs":[{"name":"Silica","quantity":2},{"name":"Energy","quantity":1}],"outputs":[{"name":"Glass","quantity":1}],"catalyst":"Water"},{"name":"Coal Gassifier","price":2048,"numberOfWorkers":2,"time":16,"inputs":[{"name":"Coal","quantity":1},{"name":"Energy","quantity":1}],"outputs":[{"name":"Reactives","quantity":1},{"name":"Waste","quantity":1}],"catalyst":"Water"},{"name":"Hullyard","price":4096,"numberOfWorkers":4,"time":32,"inputs":[{"name":"Steel","quantity":4},{"name":"Plastic","quantity":2}],"outputs":[{"name":"Hulls","quantity":2}],"catalyst":"Heavy Tools"},{"name":"Neon Refinery","price":4096,"numberOfWorkers":4,"time":16,"inputs":[{"name":"Reactives","quantity":2}],"outputs":[{"name":"Neon Gas","quantity":1}],"catalyst":"Water"},{"name":"Booster Plant","price":4096,"numberOfWorkers":4,"time":32,"inputs":[{"name":"Iron","quantity":3},{"name":"Reactives","quantity":1}],"outputs":[{"name":"Retrograde","quantity":1},{"name":"Waste","quantity":1}],"catalyst":"Neon Gas"},{"name":"Furniture Assembler","price":4096,"numberOfWorkers":2,"time":32,"inputs":[{"name":"Plastic","quantity":1}],"outputs":[{"name":"Furniture","quantity":1}],"catalyst":"Energy"},{"name":"Motor Assembly","price":4096,"numberOfWorkers":4,"time":32,"inputs":[{"name":"Steel","quantity":1},{"name":"Wire","quantity":4}],"outputs":[{"name":"Motor","quantity":2}],"catalyst":"Energy"},{"name":"Paperclip Stamper","price":4096,"numberOfWorkers":2,"time":16,"inputs":[{"name":"Steel","quantity":1}],"outputs":[{"name":"PaperClips","quantity":4}],"catalyst":"Heavy Tools"},{"name":"Rocket Factory","price":8192,"numberOfWorkers":4,"time":32,"inputs":[{"name":"Widgets","quantity":5},{"name":"Steel","quantity":2}],"outputs":[{"name":"Rockets","quantity":2}],"catalyst":"RobotArm"},{"name":"CPU Fab","price":8192,"numberOfWorkers":4,"time":16,"inputs":[{"name":"Silica","quantity":3},{"name":"Neon Gas","quantity":1},{"name":"Wire","quantity":2}],"outputs":[{"name":"CPU","quantity":1},{"name":"Waste","quantity":1}],"catalyst":"RobotArm"},{"name":"Signworks","price":8192,"numberOfWorkers":4,"time":32,"inputs":[{"name":"Glass","quantity":1},{"name":"Neon Gas","quantity":1}],"outputs":[{"name":"Signage","quantity":1}],"catalyst":"Heavy Tools"},{"name":"Luxury Assembler","price":8192,"numberOfWorkers":4,"time":16,"inputs":[{"name":"Hulls","quantity":1},{"name":"Furniture","quantity":2},{"name":"Steel","quantity":1}],"outputs":[{"name":"Luxury Rooms","quantity":1},{"name":"Waste","quantity":2}],"catalyst":"Heavy Tools"},{"name":"Heavyworks","price":4096,"numberOfWorkers":4,"time":16,"inputs":[{"name":"Steel","quantity":1},{"name":"Widgets","quantity":1},{"name":"Motor","quantity":1}],"outputs":[{"name":"Heavy Tools","quantity":1}],"catalyst":"Energy"},{"name":"Tube Plant","price":4096,"numberOfWorkers":2,"time":64,"inputs":[{"name":"Glass","quantity":1},{"name":"CPU","quantity":1},{"name":"Wire","quantity":2}],"outputs":[{"name":"Televisions","quantity":2}],"catalyst":"RobotArm"},{"name":"Framer","price":16384,"numberOfWorkers":4,"time":32,"inputs":[{"name":"CPU","quantity":2},{"name":"Widgets","quantity":3},{"name":"Wire","quantity":3}],"outputs":[{"name":"Mainframes","quantity":2}],"catalyst":"RobotArm"},{"name":"Grey Assembly","price":8192,"numberOfWorkers":4,"time":64,"inputs":[{"name":"CPU","quantity":2},{"name":"Reactives","quantity":4},{"name":"Solvent","quantity":8}],"outputs":[{"name":"Assembra","quantity":2},{"name":"Waste","quantity":4}],"catalyst":"RobotArm"},{"name":"Armory","price":16384,"numberOfWorkers":4,"time":64,"inputs":[{"name":"CPU","quantity":1},{"name":"Motor","quantity":1},{"name":"Widgets","quantity":2},{"name":"Steel","quantity":1}],"outputs":[{"name":"RobotArm","quantity":2}],"catalyst":"Heavy Tools"},{"name":"WorkRocket Platform","price":8192,"numberOfWorkers":8,"time":64,"inputs":[{"name":"Rockets","quantity":8},{"name":"Retrograde","quantity":8},{"name":"Hulls","quantity":6},{"name":"Motor","quantity":24}],"outputs":[],"catalyst":"Assembra"},{"name":"SpaceLiner Platform","price":16384,"numberOfWorkers":8,"time":64,"inputs":[{"name":"Rockets","quantity":8},{"name":"Retrograde","quantity":16},{"name":"Luxury Rooms","quantity":8},{"name":"Televisions","quantity":8}],"outputs":[],"catalyst":"Assembra"},{"name":"Compute Platform","price":32768,"numberOfWorkers":8,"time":64,"inputs":[{"name":"Rockets","quantity":8},{"name":"Retrograde","quantity":4},{"name":"Hulls","quantity":4},{"name":"Mainframes","quantity":8}],"outputs":[],"catalyst":"Assembra"},{"name":"The Mechanist","price":4096,"numberOfWorkers":1,"time":128,"inputs":[{"name":"RobotArm","quantity":4}],"outputs":[],"catalyst":"Assembra"},{"name":"Atmospheric Seeder","price":0,"numberOfWorkers":0,"time":9,"inputs":[{"name":"Steam Tank","quantity":6},{"name":"Assembra","quantity":1}],"outputs":[],"catalyst":"Solvent"},{"name":"Steam Boiler","price":0,"numberOfWorkers":0,"time":32,"inputs":[{"name":"Water","quantity":2},{"name":"Energy","quantity":1}],"outputs":[{"name":"Steam Tank","quantity":8}],"catalyst":"Heavy Tools"},{"name":"Reclamation Engine","price":0,"numberOfWorkers":0,"time":32,"inputs":[{"name":"Solvent","quantity":6},{"name":"Energy","quantity":2}],"outputs":[{"name":"Coal","quantity":8},{"name":"Iron","quantity":4},{"name":"Copper","quantity":2}],"catalyst":"Assembra"}];
+
+// Build lookup: resource name -> [industries that produce it]
+const producerMap = {};
+for (const ind of INDUSTRIES) {
+  for (const out of ind.outputs) {
+    if (!producerMap[out.name]) producerMap[out.name] = [];
+    producerMap[out.name].push(ind);
+  }
+}
+
+// Track recipe choices: resource name -> selected industry name
+const recipeChoices = {};
+
+// Track catalyst toggles: keyed by tree node path
+const catalystToggles = {};
+
+const targetSelect = document.getElementById('target-select');
+const recipePickersDiv = document.getElementById('recipe-pickers');
+const treeDiv = document.getElementById('tree');
+const summaryDiv = document.getElementById('summary');
+
+// Populate target dropdown
+for (const ind of INDUSTRIES) {
+  const opt = document.createElement('option');
+  opt.value = ind.name;
+  opt.textContent = ind.name;
+  targetSelect.appendChild(opt);
+}
+
+const targetLevel = document.getElementById('target-level');
+
+targetSelect.addEventListener('change', () => {
+  Object.keys(catalystToggles).forEach(k => delete catalystToggles[k]);
+  recalculate();
+});
+
+targetLevel.addEventListener('input', () => recalculate());
+
+function getProducer(resourceName) {
+  const producers = producerMap[resourceName];
+  if (!producers || producers.length === 0) return null;
+  if (producers.length === 1) return producers[0];
+  const chosen = recipeChoices[resourceName];
+  if (chosen) {
+    const found = producers.find(p => p.name === chosen);
+    if (found) return found;
+  }
+  return producers[0];
+}
+
+function findAllNeededResources(industryName, visited = new Set()) {
+  const ind = INDUSTRIES.find(i => i.name === industryName);
+  if (!ind) return new Set();
+  visited.add(industryName);
+  const resources = new Set();
+  for (const input of ind.inputs) {
+    resources.add(input.name);
+    const producer = getProducer(input.name);
+    if (producer && !visited.has(producer.name)) {
+      for (const r of findAllNeededResources(producer.name, visited)) {
+        resources.add(r);
+      }
+    }
+  }
+  return resources;
+}
+
+function buildRecipePickers() {
+  const targetName = targetSelect.value;
+  recipePickersDiv.innerHTML = '';
+  if (!targetName) return;
+
+  const neededResources = findAllNeededResources(targetName);
+  const ambiguous = [];
+  for (const res of neededResources) {
+    const producers = producerMap[res];
+    if (producers && producers.length > 1) {
+      ambiguous.push({ resource: res, producers });
+    }
+  }
+
+  if (ambiguous.length === 0) return;
+
+  for (const { resource, producers } of ambiguous) {
+    const div = document.createElement('div');
+    div.className = 'picker';
+    const span = document.createElement('span');
+    span.textContent = resource + ':';
+    div.appendChild(span);
+    const sel = document.createElement('select');
+    for (const p of producers) {
+      const opt = document.createElement('option');
+      opt.value = p.name;
+      opt.textContent = p.name;
+      if (recipeChoices[resource] === p.name) opt.selected = true;
+      sel.appendChild(opt);
+    }
+    if (!recipeChoices[resource]) recipeChoices[resource] = producers[0].name;
+    sel.addEventListener('change', () => {
+      recipeChoices[resource] = sel.value;
+      recalculate();
+    });
+    div.appendChild(sel);
+    recipePickersDiv.appendChild(div);
+  }
+}
+
+function getEffectiveTime(industry, catalyzed, level = 0) {
+  const multiplier = 1 + (level * 0.5) + (catalyzed ? 1 : 0);
+  return industry.time / multiplier;
+}
+
+// Build the dependency tree as a data structure
+// Returns: { industry, count, catalyzed, catalystName, inputs: [{ resourceName, qtyPerCycle, children: tree }] }
+function buildTree(industryName, requiredRate, path, level = 0) {
+  const ind = INDUSTRIES.find(i => i.name === industryName);
+  if (!ind) return null;
+
+  const pathKey = path.join('/');
+  const catalyzed = !!catalystToggles[pathKey];
+  const effTime = getEffectiveTime(ind, catalyzed, level);
+
+  // How many of this building needed?
+  // Each building produces its outputs every effTime seconds.
+  // requiredRate is in units/second
+  // One building's output rate for each output... but we care about the specific output
+  // Actually requiredRate is already the count (fractional) of buildings needed
+  const count = requiredRate;
+
+  const inputChildren = [];
+  for (const input of ind.inputs) {
+    // This building consumes input.quantity every effTime seconds
+    // With `count` buildings, total consumption = count * input.quantity / effTime units/sec
+    const consumptionRate = count * input.quantity / effTime;
+
+    const producer = getProducer(input.name);
+    if (producer) {
+      // Find the output entry for this resource
+      const outputEntry = producer.outputs.find(o => o.name === input.name);
+      if (outputEntry) {
+        const producerPath = [...path, producer.name + ':' + input.name];
+        const producerPathKey = producerPath.join('/');
+        const producerCatalyzed = !!catalystToggles[producerPathKey];
+        const producerEffTime = getEffectiveTime(producer, producerCatalyzed);
+        // One producer building outputs outputEntry.quantity / producerEffTime per second
+        const oneProducerRate = outputEntry.quantity / producerEffTime;
+        const producerCount = consumptionRate / oneProducerRate;
+
+        const childTree = buildTree(producer.name, producerCount, producerPath);
+        inputChildren.push({
+          resourceName: input.name,
+          qtyPerCycle: input.quantity,
+          consumptionRate,
+          child: childTree
+        });
+      }
+    } else {
+      inputChildren.push({
+        resourceName: input.name,
+        qtyPerCycle: input.quantity,
+        consumptionRate,
+        child: null
+      });
+    }
+  }
+
+  return {
+    industry: ind,
+    count,
+    catalyzed,
+    level,
+    path: pathKey,
+    inputs: inputChildren
+  };
+}
+
+function renderTree(node, isRoot = false) {
+  if (!node) return '';
+  const ind = node.industry;
+  const countExact = node.count;
+  const countCeil = Math.ceil(countExact - 0.0001); // small epsilon for float
+  const countDisplay = Number.isInteger(countExact) || Math.abs(countExact - countCeil) < 0.001
+    ? `${countCeil}x`
+    : `${countCeil}x`;
+  const exactDisplay = Math.abs(countExact - countCeil) > 0.001
+    ? `(${countExact.toFixed(2)}x exact)`
+    : '';
+
+  const effTime = getEffectiveTime(ind, node.catalyzed, node.level || 0);
+  const catalystChecked = node.catalyzed ? 'checked' : '';
+  const levelDisplay = node.level ? ` Lv${node.level}` : '';
+
+  let html = `<div class="tree-node ${isRoot ? 'tree-root' : ''}">`;
+  html += `<div class="node-row">`;
+  html += `<span class="node-name">${ind.name}${levelDisplay}</span>`;
+  html += `<span class="node-count">${countDisplay}</span>`;
+  if (exactDisplay) html += `<span class="node-count-exact">${exactDisplay}</span>`;
+  html += `<span class="node-rate">[${effTime}s/cycle]</span>`;
+  html += `<label class="catalyst-toggle">`;
+  html += `<input type="checkbox" data-path="${node.path}" ${catalystChecked}>`;
+  html += `<span class="catalyst-label">cat: ${ind.catalyst}</span>`;
+  html += `</label>`;
+  html += `</div>`;
+
+  for (const input of node.inputs) {
+    const rateStr = input.consumptionRate.toFixed(3);
+    if (input.child) {
+      html += renderTree(input.child);
+    } else {
+      html += `<div class="tree-node"><div class="node-row">`;
+      html += `<span class="node-resource">${input.resourceName}</span>`;
+      html += `<span class="node-rate">${rateStr}/s needed (no producer found)</span>`;
+      html += `</div></div>`;
+    }
+  }
+
+  html += `</div>`;
+  return html;
+}
+
+function collectSummary(node, summary = {}) {
+  if (!node) return summary;
+  const name = node.industry.name;
+  const countCeil = Math.ceil(node.count - 0.0001);
+  if (!summary[name]) {
+    summary[name] = { industry: node.industry, count: 0, exact: 0 };
+  }
+  summary[name].count += countCeil;
+  summary[name].exact += node.count;
+  for (const input of node.inputs) {
+    if (input.child) collectSummary(input.child, summary);
+  }
+  return summary;
+}
+
+function renderSummary(tree) {
+  if (!tree) return '<div class="empty-state">No data yet.</div>';
+  const summary = collectSummary(tree);
+  const entries = Object.values(summary).sort((a, b) => b.industry.price - a.industry.price);
+
+  let totalCost = 0;
+  let totalWorkers = 0;
+
+  let html = '<table><thead><tr>';
+  html += '<th>Building</th><th class="num">Count</th><th class="num">Exact</th>';
+  html += '<th class="num">Cost</th><th class="num">Workers</th>';
+  html += '</tr></thead><tbody>';
+
+  for (const e of entries) {
+    const cost = e.count * e.industry.price;
+    const workers = e.count * e.industry.numberOfWorkers;
+    totalCost += cost;
+    totalWorkers += workers;
+    html += `<tr>`;
+    html += `<td>${e.industry.name}</td>`;
+    html += `<td class="num">${e.count}</td>`;
+    html += `<td class="num">${e.exact.toFixed(2)}</td>`;
+    html += `<td class="num">${cost.toLocaleString()}</td>`;
+    html += `<td class="num">${workers}</td>`;
+    html += `</tr>`;
+  }
+
+  html += `<tr class="total-row">`;
+  html += `<td>TOTAL</td><td></td><td></td>`;
+  html += `<td class="num">${totalCost.toLocaleString()}</td>`;
+  html += `<td class="num">${totalWorkers}</td>`;
+  html += `</tr>`;
+
+  html += '</tbody></table>';
+  return html;
+}
+
+function recalculate() {
+  const targetName = targetSelect.value;
+  buildRecipePickers();
+
+  if (!targetName) {
+    treeDiv.innerHTML = '<div class="empty-state">Select an industry above to calculate its production chain.</div>';
+    summaryDiv.innerHTML = '<div class="empty-state">No data yet.</div>';
+    return;
+  }
+
+  const level = parseInt(targetLevel.value) || 0;
+  const tree = buildTree(targetName, 1, [targetName], level);
+  treeDiv.innerHTML = tree ? renderTree(tree, true) : '<div class="empty-state">Could not build tree.</div>';
+  summaryDiv.innerHTML = renderSummary(tree);
+
+  // Bind catalyst toggles
+  treeDiv.querySelectorAll('input[type="checkbox"][data-path]').forEach(cb => {
+    cb.addEventListener('change', () => {
+      catalystToggles[cb.dataset.path] = cb.checked;
+      recalculate();
+    });
+  });
+}
+
+recalculate();
+</script>
+</body>
+</html>

@@ -1,0 +1,992 @@
+[
+  {
+    "name": "Water Pump",
+    "price": 1024,
+    "numberOfWorkers": 0,
+    "time": 16,
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "Water",
+        "quantity": 1
+      }
+    ],
+    "catalyst": "Energy"
+  },
+  {
+    "name": "Oil Well",
+    "price": 1024,
+    "numberOfWorkers": 0,
+    "time": 16,
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "Crude Oil",
+        "quantity": 1
+      }
+    ],
+    "catalyst": "Water"
+  },
+  {
+    "name": "Geothermal",
+    "price": 4096,
+    "numberOfWorkers": 0,
+    "time": 16,
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "Energy",
+        "quantity": 1
+      }
+    ],
+    "catalyst": "Water"
+  },
+  {
+    "name": "Coal Mine",
+    "price": 1024,
+    "numberOfWorkers": 0,
+    "time": 16,
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "Coal",
+        "quantity": 1
+      }
+    ],
+    "catalyst": "Waste"
+  },
+  {
+    "name": "Copper Mine",
+    "price": 1024,
+    "numberOfWorkers": 0,
+    "time": 16,
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "Copper",
+        "quantity": 1
+      }
+    ],
+    "catalyst": "Waste"
+  },
+  {
+    "name": "Iron Mine",
+    "price": 1024,
+    "numberOfWorkers": 0,
+    "time": 16,
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "Iron",
+        "quantity": 2
+      }
+    ],
+    "catalyst": "Waste"
+  },
+  {
+    "name": "Silica Quarry",
+    "price": 1024,
+    "numberOfWorkers": 0,
+    "time": 16,
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "Silica",
+        "quantity": 2
+      }
+    ],
+    "catalyst": "Waste"
+  },
+  {
+    "name": "Coal Powerplant",
+    "price": 2048,
+    "numberOfWorkers": 4,
+    "time": 8,
+    "inputs": [
+      {
+        "name": "Coal",
+        "quantity": 2
+      }
+    ],
+    "outputs": [
+      {
+        "name": "Energy",
+        "quantity": 1
+      }
+    ],
+    "catalyst": "Water"
+  },
+  {
+    "name": "Oil Powerplant",
+    "price": 2048,
+    "numberOfWorkers": 4,
+    "time": 8,
+    "inputs": [
+      {
+        "name": "Crude Oil",
+        "quantity": 2
+      }
+    ],
+    "outputs": [
+      {
+        "name": "Energy",
+        "quantity": 1
+      }
+    ],
+    "catalyst": "Water"
+  },
+  {
+    "name": "Oil Refinery",
+    "price": 2048,
+    "numberOfWorkers": 4,
+    "time": 16,
+    "inputs": [
+      {
+        "name": "Crude Oil",
+        "quantity": 2
+      }
+    ],
+    "outputs": [
+      {
+        "name": "Reactives",
+        "quantity": 1
+      }
+    ],
+    "catalyst": "Water"
+  },
+  {
+    "name": "Steel Mill",
+    "price": 4096,
+    "numberOfWorkers": 8,
+    "time": 8,
+    "inputs": [
+      {
+        "name": "Coal",
+        "quantity": 2
+      },
+      {
+        "name": "Iron",
+        "quantity": 2
+      }
+    ],
+    "outputs": [
+      {
+        "name": "Steel",
+        "quantity": 2
+      }
+    ],
+    "catalyst": "Energy"
+  },
+  {
+    "name": "Salt Refinery",
+    "price": 2048,
+    "numberOfWorkers": 2,
+    "time": 16,
+    "inputs": [
+      {
+        "name": "Silica",
+        "quantity": 2
+      }
+    ],
+    "outputs": [
+      {
+        "name": "Salt",
+        "quantity": 1
+      }
+    ],
+    "catalyst": "Energy"
+  },
+  {
+    "name": "Plasticizer",
+    "price": 2048,
+    "numberOfWorkers": 4,
+    "time": 16,
+    "inputs": [
+      {
+        "name": "Crude Oil",
+        "quantity": 2
+      }
+    ],
+    "outputs": [
+      {
+        "name": "Plastic",
+        "quantity": 1
+      }
+    ],
+    "catalyst": "Water"
+  },
+  {
+    "name": "Hardmold",
+    "price": 2048,
+    "numberOfWorkers": 4,
+    "time": 16,
+    "inputs": [
+      {
+        "name": "Coal",
+        "quantity": 2
+      }
+    ],
+    "outputs": [
+      {
+        "name": "Plastic",
+        "quantity": 1
+      }
+    ],
+    "catalyst": "Energy"
+  },
+  {
+    "name": "Solva",
+    "price": 2048,
+    "numberOfWorkers": 4,
+    "time": 32,
+    "inputs": [
+      {
+        "name": "Crude Oil",
+        "quantity": 1
+      },
+      {
+        "name": "Silica",
+        "quantity": 2
+      },
+      {
+        "name": "Water",
+        "quantity": 1
+      }
+    ],
+    "outputs": [
+      {
+        "name": "Solvent",
+        "quantity": 6
+      },
+      {
+        "name": "Waste",
+        "quantity": 1
+      }
+    ],
+    "catalyst": "Neon Gas"
+  },
+  {
+    "name": "Wire Coiler",
+    "price": 1024,
+    "numberOfWorkers": 2,
+    "time": 32,
+    "inputs": [
+      {
+        "name": "Copper",
+        "quantity": 1
+      }
+    ],
+    "outputs": [
+      {
+        "name": "Wire",
+        "quantity": 2
+      }
+    ],
+    "catalyst": "Energy"
+  },
+  {
+    "name": "Concrete Yard",
+    "price": 2048,
+    "numberOfWorkers": 4,
+    "time": 16,
+    "inputs": [
+      {
+        "name": "Silica",
+        "quantity": 2
+      },
+      {
+        "name": "Water",
+        "quantity": 1
+      }
+    ],
+    "outputs": [
+      {
+        "name": "Concrete",
+        "quantity": 1
+      }
+    ],
+    "catalyst": "Energy"
+  },
+  {
+    "name": "Appliance Plant",
+    "price": 4096,
+    "numberOfWorkers": 4,
+    "time": 16,
+    "inputs": [
+      {
+        "name": "Steel",
+        "quantity": 1
+      },
+      {
+        "name": "Wire",
+        "quantity": 1
+      }
+    ],
+    "outputs": [
+      {
+        "name": "Appliances",
+        "quantity": 1
+      }
+    ],
+    "catalyst": "Energy"
+  },
+  {
+    "name": "Incinerator",
+    "price": 2048,
+    "numberOfWorkers": 1,
+    "time": 32,
+    "inputs": [
+      {
+        "name": "Waste",
+        "quantity": 2
+      }
+    ],
+    "outputs": [],
+    "catalyst": "Solvent"
+  },
+  {
+    "name": "Tool Die",
+    "price": 2048,
+    "numberOfWorkers": 2,
+    "time": 32,
+    "inputs": [
+      {
+        "name": "Plastic",
+        "quantity": 1
+      }
+    ],
+    "outputs": [
+      {
+        "name": "Widgets",
+        "quantity": 1
+      }
+    ],
+    "catalyst": "Energy"
+  },
+  {
+    "name": "Glass Smelter",
+    "price": 4096,
+    "numberOfWorkers": 4,
+    "time": 16,
+    "inputs": [
+      {
+        "name": "Silica",
+        "quantity": 2
+      },
+      {
+        "name": "Energy",
+        "quantity": 1
+      }
+    ],
+    "outputs": [
+      {
+        "name": "Glass",
+        "quantity": 1
+      }
+    ],
+    "catalyst": "Water"
+  },
+  {
+    "name": "Coal Gassifier",
+    "price": 2048,
+    "numberOfWorkers": 2,
+    "time": 16,
+    "inputs": [
+      {
+        "name": "Coal",
+        "quantity": 1
+      },
+      {
+        "name": "Energy",
+        "quantity": 1
+      }
+    ],
+    "outputs": [
+      {
+        "name": "Reactives",
+        "quantity": 1
+      },
+      {
+        "name": "Waste",
+        "quantity": 1
+      }
+    ],
+    "catalyst": "Water"
+  },
+  {
+    "name": "Electronics Fab",
+    "price": 4096,
+    "numberOfWorkers": 4,
+    "time": 16,
+    "inputs": [
+      {
+        "name": "Silica",
+        "quantity": 1
+      },
+      {
+        "name": "Wire",
+        "quantity": 2
+      },
+      {
+        "name": "Energy",
+        "quantity": 1
+      }
+    ],
+    "outputs": [
+      {
+        "name": "Appliances",
+        "quantity": 3
+      },
+      {
+        "name": "Waste",
+        "quantity": 1
+      }
+    ],
+    "catalyst": "Water"
+  },
+  {
+    "name": "Hullyard",
+    "price": 4096,
+    "numberOfWorkers": 4,
+    "time": 32,
+    "inputs": [
+      {
+        "name": "Steel",
+        "quantity": 4
+      },
+      {
+        "name": "Plastic",
+        "quantity": 2
+      }
+    ],
+    "outputs": [
+      {
+        "name": "Hulls",
+        "quantity": 2
+      }
+    ],
+    "catalyst": "Heavy Tools"
+  },
+  {
+    "name": "Neon Refinery",
+    "price": 4096,
+    "numberOfWorkers": 4,
+    "time": 16,
+    "inputs": [
+      {
+        "name": "Reactives",
+        "quantity": 2
+      }
+    ],
+    "outputs": [
+      {
+        "name": "Neon Gas",
+        "quantity": 1
+      }
+    ],
+    "catalyst": "Water"
+  },
+  {
+    "name": "Booster Plant",
+    "price": 4096,
+    "numberOfWorkers": 4,
+    "time": 32,
+    "inputs": [
+      {
+        "name": "Iron",
+        "quantity": 3
+      },
+      {
+        "name": "Reactives",
+        "quantity": 1
+      }
+    ],
+    "outputs": [
+      {
+        "name": "Retrograde",
+        "quantity": 1
+      },
+      {
+        "name": "Waste",
+        "quantity": 1
+      }
+    ],
+    "catalyst": "Neon Gas"
+  },
+  {
+    "name": "Furniture Assembler",
+    "price": 4096,
+    "numberOfWorkers": 2,
+    "time": 32,
+    "inputs": [
+      {
+        "name": "Plastic",
+        "quantity": 1
+      }
+    ],
+    "outputs": [
+      {
+        "name": "Furniture",
+        "quantity": 1
+      }
+    ],
+    "catalyst": "Energy"
+  },
+  {
+    "name": "Motor Assembly",
+    "price": 4096,
+    "numberOfWorkers": 4,
+    "time": 32,
+    "inputs": [
+      {
+        "name": "Steel",
+        "quantity": 1
+      },
+      {
+        "name": "Wire",
+        "quantity": 4
+      }
+    ],
+    "outputs": [
+      {
+        "name": "Motor",
+        "quantity": 2
+      }
+    ],
+    "catalyst": "Energy"
+  },
+  {
+    "name": "Paperclip Stamper",
+    "price": 4096,
+    "numberOfWorkers": 2,
+    "time": 16,
+    "inputs": [
+      {
+        "name": "Steel",
+        "quantity": 1
+      }
+    ],
+    "outputs": [
+      {
+        "name": "PaperClips",
+        "quantity": 4
+      }
+    ],
+    "catalyst": "Heavy Tools"
+  },
+  {
+    "name": "Rocket Factory",
+    "price": 8192,
+    "numberOfWorkers": 4,
+    "time": 32,
+    "inputs": [
+      {
+        "name": "Widgets",
+        "quantity": 5
+      },
+      {
+        "name": "Steel",
+        "quantity": 2
+      }
+    ],
+    "outputs": [
+      {
+        "name": "Rockets",
+        "quantity": 2
+      }
+    ],
+    "catalyst": "RobotArm"
+  },
+  {
+    "name": "CPU Fab",
+    "price": 8192,
+    "numberOfWorkers": 4,
+    "time": 16,
+    "inputs": [
+      {
+        "name": "Silica",
+        "quantity": 3
+      },
+      {
+        "name": "Neon Gas",
+        "quantity": 1
+      },
+      {
+        "name": "Wire",
+        "quantity": 2
+      }
+    ],
+    "outputs": [
+      {
+        "name": "CPU",
+        "quantity": 1
+      },
+      {
+        "name": "Waste",
+        "quantity": 1
+      }
+    ],
+    "catalyst": "RobotArm"
+  },
+  {
+    "name": "Signworks",
+    "price": 8192,
+    "numberOfWorkers": 4,
+    "time": 32,
+    "inputs": [
+      {
+        "name": "Glass",
+        "quantity": 1
+      },
+      {
+        "name": "Neon Gas",
+        "quantity": 1
+      }
+    ],
+    "outputs": [
+      {
+        "name": "Signage",
+        "quantity": 1
+      }
+    ],
+    "catalyst": "Heavy Tools"
+  },
+  {
+    "name": "Luxury Assembler",
+    "price": 8192,
+    "numberOfWorkers": 4,
+    "time": 16,
+    "inputs": [
+      {
+        "name": "Hulls",
+        "quantity": 1
+      },
+      {
+        "name": "Furniture",
+        "quantity": 2
+      },
+      {
+        "name": "Steel",
+        "quantity": 1
+      }
+    ],
+    "outputs": [
+      {
+        "name": "Luxury Rooms",
+        "quantity": 1
+      },
+      {
+        "name": "Waste",
+        "quantity": 2
+      }
+    ],
+    "catalyst": "Heavy Tools"
+  },
+  {
+    "name": "Heavyworks",
+    "price": 4096,
+    "numberOfWorkers": 4,
+    "time": 16,
+    "inputs": [
+      {
+        "name": "Steel",
+        "quantity": 1
+      },
+      {
+        "name": "Widgets",
+        "quantity": 1
+      },
+      {
+        "name": "Motor",
+        "quantity": 1
+      }
+    ],
+    "outputs": [
+      {
+        "name": "Heavy Tools",
+        "quantity": 1
+      }
+    ],
+    "catalyst": "Energy"
+  },
+  {
+    "name": "Tube Plant",
+    "price": 4096,
+    "numberOfWorkers": 2,
+    "time": 64,
+    "inputs": [
+      {
+        "name": "Glass",
+        "quantity": 1
+      },
+      {
+        "name": "CPU",
+        "quantity": 1
+      },
+      {
+        "name": "Wire",
+        "quantity": 2
+      }
+    ],
+    "outputs": [
+      {
+        "name": "Televisions",
+        "quantity": 2
+      }
+    ],
+    "catalyst": "RobotArm"
+  },
+  {
+    "name": "Framer",
+    "price": 16384,
+    "numberOfWorkers": 4,
+    "time": 32,
+    "inputs": [
+      {
+        "name": "CPU",
+        "quantity": 2
+      },
+      {
+        "name": "Widgets",
+        "quantity": 3
+      },
+      {
+        "name": "Wire",
+        "quantity": 3
+      }
+    ],
+    "outputs": [
+      {
+        "name": "Mainframes",
+        "quantity": 2
+      }
+    ],
+    "catalyst": "RobotArm"
+  },
+  {
+    "name": "Grey Assembly",
+    "price": 8192,
+    "numberOfWorkers": 4,
+    "time": 64,
+    "inputs": [
+      {
+        "name": "CPU",
+        "quantity": 2
+      },
+      {
+        "name": "Reactives",
+        "quantity": 4
+      },
+      {
+        "name": "Solvent",
+        "quantity": 8
+      }
+    ],
+    "outputs": [
+      {
+        "name": "Assembra",
+        "quantity": 2
+      },
+      {
+        "name": "Waste",
+        "quantity": 4
+      }
+    ],
+    "catalyst": "RobotArm"
+  },
+  {
+    "name": "Armory",
+    "price": 16384,
+    "numberOfWorkers": 4,
+    "time": 64,
+    "inputs": [
+      {
+        "name": "CPU",
+        "quantity": 1
+      },
+      {
+        "name": "Motor",
+        "quantity": 1
+      },
+      {
+        "name": "Widgets",
+        "quantity": 2
+      },
+      {
+        "name": "Steel",
+        "quantity": 1
+      }
+    ],
+    "outputs": [
+      {
+        "name": "RobotArm",
+        "quantity": 2
+      }
+    ],
+    "catalyst": "Heavy Tools"
+  },
+  {
+    "name": "WorkRocket Platform",
+    "price": 8192,
+    "numberOfWorkers": 8,
+    "time": 64,
+    "inputs": [
+      {
+        "name": "Rockets",
+        "quantity": 8
+      },
+      {
+        "name": "Retrograde",
+        "quantity": 8
+      },
+      {
+        "name": "Hulls",
+        "quantity": 6
+      },
+      {
+        "name": "Motor",
+        "quantity": 24
+      }
+    ],
+    "outputs": [],
+    "catalyst": "Assembra"
+  },
+  {
+    "name": "SpaceLiner Platform",
+    "price": 16384,
+    "numberOfWorkers": 8,
+    "time": 64,
+    "inputs": [
+      {
+        "name": "Rockets",
+        "quantity": 8
+      },
+      {
+        "name": "Retrograde",
+        "quantity": 16
+      },
+      {
+        "name": "Luxury Rooms",
+        "quantity": 8
+      },
+      {
+        "name": "Televisions",
+        "quantity": 8
+      }
+    ],
+    "outputs": [],
+    "catalyst": "Assembra"
+  },
+  {
+    "name": "Compute Platform",
+    "price": 32768,
+    "numberOfWorkers": 8,
+    "time": 64,
+    "inputs": [
+      {
+        "name": "Rockets",
+        "quantity": 8
+      },
+      {
+        "name": "Retrograde",
+        "quantity": 4
+      },
+      {
+        "name": "Hulls",
+        "quantity": 4
+      },
+      {
+        "name": "Mainframes",
+        "quantity": 8
+      }
+    ],
+    "outputs": [],
+    "catalyst": "Assembra"
+  },
+  {
+    "name": "The Mechanist",
+    "price": 4096,
+    "numberOfWorkers": 1,
+    "time": 128,
+    "inputs": [
+      {
+        "name": "RobotArm",
+        "quantity": 4
+      }
+    ],
+    "outputs": [],
+    "catalyst": "Assembra"
+  },
+  {
+    "name": "Atmospheric Seeder",
+    "price": 0,
+    "numberOfWorkers": 0,
+    "time": 9,
+    "inputs": [
+      {
+        "name": "Steam Tank",
+        "quantity": 6
+      },
+      {
+        "name": "Assembra",
+        "quantity": 1
+      }
+    ],
+    "outputs": [],
+    "catalyst": "Solvent"
+  },
+  {
+    "name": "Steam Boiler",
+    "price": 0,
+    "numberOfWorkers": 0,
+    "time": 32,
+    "inputs": [
+      {
+        "name": "Water",
+        "quantity": 2
+      },
+      {
+        "name": "Energy",
+        "quantity": 1
+      }
+    ],
+    "outputs": [
+      {
+        "name": "Steam Tank",
+        "quantity": 8
+      }
+    ],
+    "catalyst": "Heavy Tools"
+  },
+  {
+    "name": "Reclamation Engine",
+    "price": 0,
+    "numberOfWorkers": 0,
+    "time": 32,
+    "inputs": [
+      {
+        "name": "Solvent",
+        "quantity": 6
+      },
+      {
+        "name": "Energy",
+        "quantity": 2
+      }
+    ],
+    "outputs": [
+      {
+        "name": "Coal",
+        "quantity": 8
+      },
+      {
+        "name": "Iron",
+        "quantity": 4
+      },
+      {
+        "name": "Copper",
+        "quantity": 2
+      }
+    ],
+    "catalyst": "Assembra"
+  }
+]
